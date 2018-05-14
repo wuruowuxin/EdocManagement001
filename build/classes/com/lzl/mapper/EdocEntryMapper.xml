@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzl.mapper.EdocEntryMapper">
+	
+	<resultMap type="com.lzl.model.EdocEntry" id="baseMap">
+		<id property="id" column="id"/>
+		<result property="edocCategory.id" column="categoryId"/>
+		<result property="title" column="title"/>
+		<result property="summary" column="summary"/>
+		<result property="uploadUser" column="uploadUser"/>
+		<result property="createDate" column="createDate"/>
+	</resultMap>
+	
+	<select id="listAll" resultType="com.lzl.model.EdocEntry">
+		select * from
+		edoc_entry order by id desc
+	</select>
+	
+	<select id="queryEdocEntriesByCategoryId" resultType="com.lzl.model.EdocEntry">
+		select * from
+		edoc_entry
+		<if test="categoryId > 0">
+			where categoryId = #{categoryId}
+		</if>
+		order by id desc
+	</select>
+	
+	<insert id="insert">
+		insert into edoc_entry
+		<trim prefix="(" prefixOverrides="," suffix=")">
+			<if test="edocCategory != null and edocCategory.id != -1">
+				,categoryId
+			</if>
+			<if test="title != null">
+				,title
+			</if>
+			<if test="summary != null">
+				,summary
+			</if>
+			<if test="uploadUser != null">
+				,uploadUser
+			</if>
+			<if test="createDate != null">
+				,createDate
+			</if>
+		</trim>
+		<trim prefix="values(" prefixOverrides="," suffix=")">
+			<if test="edocCategory != null and edocCategory.id != -1">
+				,#{edocCategory.id}
+			</if>
+			<if test="title != null">
+				,#{title}
+			</if>
+			<if test="summary != null">
+				,#{summary}
+			</if>
+			<if test="uploadUser != null">
+				,#{uploadUser}
+			</if>
+			<if test="createDate != null">
+				,#{createDate}
+			</if>
+		</trim>
+	</insert>
+	<select id="queryByPrimaryKey" resultMap="baseMap">
+		select * from edoc_entry
+		where id = #{id}
+	</select>
+	<update id="update">
+		update
+		edoc_entry
+		<set>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="summary != null">
+				summary = #{summary},
+			</if>
+			<if test="uploadUser != null">
+				uploadUser = #{uploadUser},
+			</if>
+			<if test="createDate != null">
+				createDate = #{createDate},
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+		</where>
+	</update>
+	
+	<delete id="delete">
+		delete 
+		from edoc_entry
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+		</where>
+	</delete>
+	
+</mapper>
